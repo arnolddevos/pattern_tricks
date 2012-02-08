@@ -56,6 +56,28 @@ Arnold deVos
 ![relationships](relationships.png)
 
 ---
-# Extractor as an inverse function:
+# Equipment needed:
 
-![inverses](inverses.png)
+![frisbee patent](frisbee2.jpg)
+
+    !scala
+    class Extractor[A,B]( f: A => Option[B] ) { 
+      def unapply( a: A ) = f(a) 
+    }
+
+---
+# Equipment needed:
+
+![retriever](dog2.jpeg)
+
+    !scala
+    def pattern[B](pf: PartialFunction[Name,B]) = 
+      new Extractor(pf.lift)
+
+---
+# Onto the tricks ...
+
+---
+# Come again?
+
+## [http://notes.langdale.com.au](http://notes.langdale.com.au/Querying_a_Dataset_with_Scala_s_Pattern_Matching.html)

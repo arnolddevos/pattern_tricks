@@ -76,7 +76,7 @@ adv-contact-trick@langdale.com.au
             </aside>
             
             <aside class="page_number">
-              1/7
+              1/10
             </aside>
           </footer>
         </div>
@@ -118,7 +118,7 @@ adv-contact-trick@langdale.com.au
             </aside>
             
             <aside class="page_number">
-              2/7
+              2/10
             </aside>
           </footer>
         </div>
@@ -160,7 +160,7 @@ adv-contact-trick@langdale.com.au
             </aside>
             
             <aside class="page_number">
-              3/7
+              3/10
             </aside>
           </footer>
         </div>
@@ -200,7 +200,7 @@ adv-contact-trick@langdale.com.au
             </aside>
             
             <aside class="page_number">
-              4/7
+              4/10
             </aside>
           </footer>
         </div>
@@ -242,7 +242,7 @@ adv-contact-trick@langdale.com.au
             </aside>
             
             <aside class="page_number">
-              5/7
+              5/10
             </aside>
           </footer>
         </div>
@@ -272,7 +272,7 @@ adv-contact-trick@langdale.com.au
             </aside>
             
             <aside class="page_number">
-              6/7
+              6/10
             </aside>
           </footer>
         </div>
@@ -280,13 +280,20 @@ adv-contact-trick@langdale.com.au
       
       <!-- slide source: pattern-tricks.md -->
       <div class="slide-wrapper">
-        <div class="slide">
+        <div class="slide has_code">
           <div class="inner">
             
-            <header><h1>Extractor as an inverse function:</h1></header>
+            <header><h1>Equipment needed:</h1></header>
             
             
-            <section><p><img alt="inverses" src="file:///home/adv/projects/pattern-tricks/inverses.png" /></p></section>
+            <section><p><img alt="frisbee patent" src="file:///home/adv/projects/pattern-tricks/frisbee2.jpg" /></p>
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3</pre></div></td><td class="code"><div class="highlight"><pre><span class="k">class</span> <span class="nc">Extractor</span><span class="o">[</span><span class="kt">A</span>,<span class="kt">B</span><span class="o">](</span> <span class="n">f</span><span class="k">:</span> <span class="kt">A</span> <span class="o">=&gt;</span> <span class="nc">Option</span><span class="o">[</span><span class="kt">B</span><span class="o">]</span> <span class="o">)</span> <span class="o">{</span> 
+  <span class="k">def</span> <span class="n">unapply</span><span class="o">(</span> <span class="n">a</span><span class="k">:</span> <span class="kt">A</span> <span class="o">)</span> <span class="k">=</span> <span class="n">f</span><span class="o">(</span><span class="n">a</span><span class="o">)</span> 
+<span class="o">}</span>
+</pre></div>
+</td></tr></table></section>
             
           </div>
           <div class="presenter_notes">
@@ -302,7 +309,100 @@ adv-contact-trick@langdale.com.au
             </aside>
             
             <aside class="page_number">
-              7/7
+              7/10
+            </aside>
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: pattern-tricks.md -->
+      <div class="slide-wrapper">
+        <div class="slide has_code">
+          <div class="inner">
+            
+            <header><h1>Equipment needed:</h1></header>
+            
+            
+            <section><p><img alt="retriever" src="file:///home/adv/projects/pattern-tricks/dog2.jpeg" /></p>
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2</pre></div></td><td class="code"><div class="highlight"><pre><span class="k">def</span> <span class="n">pattern</span><span class="o">[</span><span class="kt">B</span><span class="o">](</span><span class="n">pf</span><span class="k">:</span> <span class="kt">PartialFunction</span><span class="o">[</span><span class="kt">Name</span>,<span class="kt">B</span><span class="o">])</span> <span class="k">=</span> 
+  <span class="k">new</span> <span class="nc">Extractor</span><span class="o">(</span><span class="n">pf</span><span class="o">.</span><span class="n">lift</span><span class="o">)</span>
+</pre></div>
+</td></tr></table></section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="pattern-tricks.md">pattern-tricks.md</a>
+            </aside>
+            
+            <aside class="page_number">
+              8/10
+            </aside>
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: pattern-tricks.md -->
+      <div class="slide-wrapper">
+        <div class="slide">
+          <div class="inner">
+            
+            <header><h1>Onto the tricks ...</h1></header>
+            
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="pattern-tricks.md">pattern-tricks.md</a>
+            </aside>
+            
+            <aside class="page_number">
+              9/10
+            </aside>
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: pattern-tricks.md -->
+      <div class="slide-wrapper">
+        <div class="slide">
+          <div class="inner">
+            
+            <header><h1>Come again?</h1></header>
+            
+            
+            <section><h2><a href="http://notes.langdale.com.au/Querying_a_Dataset_with_Scala_s_Pattern_Matching.html">http://notes.langdale.com.au</a></h2></section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="pattern-tricks.md">pattern-tricks.md</a>
+            </aside>
+            
+            <aside class="page_number">
+              10/10
             </aside>
           </footer>
         </div>
@@ -353,8 +453,26 @@ adv-contact-trick@langdale.com.au
       
       
       <tr id="toc-row-7">
-        <th><a href="#slide7">Extractor as an inverse function:</a></th>
+        <th><a href="#slide7">Equipment needed:</a></th>
         <td><a href="#slide7">7</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-8">
+        <th><a href="#slide8">Equipment needed:</a></th>
+        <td><a href="#slide8">8</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-9">
+        <th><a href="#slide9">Onto the tricks ...</a></th>
+        <td><a href="#slide9">9</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-10">
+        <th><a href="#slide10">Come again?</a></th>
+        <td><a href="#slide10">10</a></td>
       </tr>
       
       
