@@ -1,0 +1,272 @@
+package au.com.langdale
+package geographer
+
+import webserver._
+import etc.Etc.LongValue
+
+import PathFinder._
+import actors.Jobber._
+import graphic.Geometry._
+import comms.Components._
+import scala.xml.Node
+import async.Drop.future
+import ConnectionPool._
+import javax.servlet.http.HttpServletRequest
+
+trait Bubbles { this: WebServer with Config => 
+
+  val Zone = LongParam("zone")
+  val Folder = StringParam("folder")
+
+  val Tolerance = DoubleParam("tolerance")
+  val Cost = DoubleParam("cost")
+  val Degree = LongParam("degree")
+
+  val From = StringParam("from")
+  val To = StringParam("to")
+
+  val defaultTolerance = 8.0 
+  val defaultCost = 0.0
+  val defaultDegree = 2
+  
+  object Feeders { 
+    val FeederSpec = "([^,]*),(.*)"r
+    def unapply(params: Parameters): Option[Seq[(String,String)]] = 
+      params get "feeder" map { _  map { case FeederSpec(v,c) => (v, c) }} 
+  }
+
+  import ContentType.XHTML._
+  
+  get(application + "/test") { request =>
+    <html xmlns={NS}>
+      <head><title>The Test Page</title></head>
+      <body>
+        <h1>Test</h1>
+        <p>Hello world.</p></body>
+    </html>
+  }
+  
+  getAsync(application + "/admin") { implicit request =>
+    for {
+      status <- PathFinder.busy
+    }
+    yield 
+      if(! status)
+        <html xmlns={NS}>
+          <head><title>Populate NETMOD Database</title></head>
+          <body>
+            <form method="post" action={ base + "/initialise/"}>
+              <p>If you press this button all the geographic data in NETMOD will
+              refreshed from the GIS_OMS database. So think about it.</p>
+              <p>If you check here, the schema will be redefined as well.
+              <input type="checkbox" name="schema" value="recreate"/></p>
+              <p>Recreate geographic data <input type="submit"/></p>
+            </form>
+          </body>   
+        </html>
+      else
+        <html xmlns={NS}>
+          <head><title>Initialise Database</title></head>
+          <body>A search or admin job is in progress.</body>  
+        </html>  
+        
+  }
+  
+  post(application + "/initialise") { request =>
+    if(request("schema") == Some("recreate"))
+      PathFinder ! InitialiseDatabase(NetMod.spec)
+    PathFinder ! PopulateDatabase(GisOms.spec, NetMod.spec)
+    redirection(application + "/admin/")
+  }
+
+  def pathFinder(area: RectArea)(implicit request: HttpServletRequest): Responder[Node] = { 
+    for {
+      status <- PathFinder.busy
+      result <- status match {
+        case true => future {
+          <html xmlns={NS}>
+            <head><title>Create Paths</title></head>
+            <body>A search or admin job is in progress.</body>  
+          </html>  
+        }
+    
+        case false =>  
+          for {
+            zones <- SpatialService.queryGeoZones( area, true )
+            feederTypes <- SpatialService.queryFeederTypes( area )
+          }
+          yield
+            if(zones.isEmpty || zones.tail.isEmpty || feederTypes.isEmpty)
+              <html xmlns={NS}>
+                <head><title>Create Paths</title></head>
+                <body>Adjust the view to include at least two Zone Substations so that a path can be created.</body>  
+              </html>  
+            else
+              pathFinder(area, zones, feederTypes)
+      }
+    }
+    yield result
+  }
+
+  def pathFinder(area: RectArea, zones: Seq[GeoZone], feederTypes: Seq[(String, String)])(implicit request: HttpServletRequest): Node =
+    <html xmlns={NS}>
+      <head><title>Create Paths</title></head>
+      <body>
+        <form method="post" action={ base + "/pathfinder/"}>  
+        <fieldset>  
+        <legend>Select 2 or more zones to connect:</legend>
+        {
+          for(GeoZone(serial, _, name, _) <- zones) yield
+            <input type="checkbox" name="zone" value={serial.toString}>{name}</input>
+        }
+        </fieldset>
+        <fieldset>  
+        <legend>Consider these feeder types:</legend>
+        {
+          for((volts, constr) <- feederTypes) yield 
+            if(constr == "OH")
+              <input type="checkbox" checked="checked" name="feeder" value={volts + "," + constr}>{volts} {constr}</input>
+            else
+              <input type="checkbox" name="feeder" value={volts + "," + constr}>{volts} {constr}</input>
+        }
+        </fieldset>
+        <fieldset>
+          <legend>Easement tolerance (m)</legend>
+          <input type="number" name="tolerance" value={defaultTolerance.toString}/>  
+        </fieldset>
+        <fieldset>
+          <legend>Max paths per Zone</legend>
+          <input type="number" name="degree" value={defaultDegree.toString}/>  
+        </fieldset>
+        <fieldset>
+          <legend>Max path length or cost (m)</legend>
+          <input type="number" name="cost" value={defaultCost.toString}/>  
+        </fieldset>
+        <input type="hidden" name="BBOX" value={ val RectArea(Point(w, s), Point(e, n)) = area; List(w,s,e,n).mkString(",")}/>
+        Folder for Results: <input type="text" name="folder" value="Temporary"/>
+        <input type="submit"/>
+        </form>
+      </body>  
+    </html>
+
+  post(application + "/pathfinder") {
+    case Params(Area(area)&Folder(FolderName(folder))&Feeders(feeders)&Zone(zs @ _*)&Tolerance(tolerance)&Degree(degree)&Cost(cost)) =>
+      PathFinder ! Search(folder, area.toRect, zs, Some(feeders), tolerance, degree.toInt, cost)
+      <html xmlns={NS}>
+        <head><title>Create Paths</title></head>
+        <body>A job to create new paths has been initiated.</body>  
+      </html>
+      
+    case _ => 400
+      
+  }
+
+  post(application + "/pathmapper") {
+    case Params(Folder(FolderName(folder))&From(as @ _*)&To(bs @ _*)&Tolerance(tolerance)&Cost(cost)) =>
+      PathFinder ! MapPaths(folder,  as zip bs, None, tolerance, cost)
+      <html xmlns={NS}>
+        <head><title>Create Paths</title></head>
+        <body>A job to create new paths has been initiated.</body>  
+      </html>
+      
+    case _ => 400
+      
+  }
+  
+  def folderBubble(folder: String)(implicit request: HttpServletRequest) = {
+
+    <html xmlns={NS}>
+      <head><title>Folder</title></head>
+      <body>
+        <form method="post" action={ base + "/paths/" + folder }>
+          <p>Computed Paths</p>
+          <fieldset>  
+            <input type="text" name="folder" value={folder}/>
+            <input type="submit" name="perform" value="Change"/>  
+          </fieldset>
+          <input type="submit" name="perform" value="Delete"/>  
+        </form>
+        <a href={base + "/download/" + folder}>Save to file</a>  
+      </body>  
+    </html>  
+    
+  }
+
+  post(application + "/paths") {
+    case PathInfo(FolderName(folder))&Params(Folder(FolderName(folderNew))&Perform(perform)) => perform match {
+      case "Delete" =>
+        PathFinder ! DeleteFolder(folder)
+        <p xmlns={NS}> Deleting all paths in {folder}</p> 
+      
+      case "Change" =>
+        PathFinder ! MergeFolder(folder, folderNew)
+        <p xmlns={NS}> Moving all paths from {folder} to {folderNew}</p> 
+      
+      case _ => 400  
+    }
+    
+    case _ => 400
+  }
+  
+  getAsync(application + "/costs") { request =>
+    import db.DBA._
+    import NetMod.withConnection
+    import comms.NetmodQueries.AllCosts
+    
+    def escape(field: String) = 
+      if( field == null)
+        ""
+      else if((field contains '"') || (field contains ","))
+        "\"" + field.replace("\"", "\"\"") + "\""
+      else
+        field
+    
+    withConnection { db =>
+      db query AllCosts map { _ map escape mkString "," } toList
+    } map { 
+      lines => ((AllCosts.fields map { _.name } mkString ",") :: lines  mkString "\n") :Result 
+    }
+  }
+  
+  def pathBubble(path: GeoPath)(implicit request: HttpServletRequest) = {
+    val GeoPath(serial, folder, zone1, aid1, zone2, aid2, comment, _, dist, geom) = path
+
+    <html xmlns={NS}>
+      <head><title>Path</title></head>
+      <body>
+        <p>Path from {aid1} {zone1} to {aid2} {zone2}, {dist}m.</p>
+        <p>{comment}</p>  
+        <form method="post" action={ base + "/path/" + serial.toString }>
+          <fieldset>  
+            <legend>Folder</legend>
+            <input type="text" name="folder" value={folder}/>
+            <input type="submit" name="perform" value="Change"/>  
+          </fieldset>
+          <input type="submit" name="perform" value="Delete"/>  
+        </form>
+      </body>  
+    </html>  
+  }    
+  
+  val Perform = StringParam("perform")
+  
+  object Serial {
+    def unapply(path: String) = Some(path drop 1) 
+  }
+
+  post(application + "/path") {
+    case PathInfo(Serial(LongValue(serial)))&Params(Folder(FolderName(folder))&Perform(perform)) => perform match {
+      case "Delete" =>
+        PathFinder ! DeletePath(serial)
+        <p xmlns={NS}> Deleting path</p> 
+      
+      case "Change" =>
+        PathFinder ! MovePath(serial, folder)
+        <p xmlns={NS}> Moving path to folder {folder}</p> 
+      
+      case _ => 400  
+    }
+    
+    case _ => 400
+  }
+}
