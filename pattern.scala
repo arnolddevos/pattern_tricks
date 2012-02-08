@@ -3,32 +3,6 @@ object Pattern {
   class Extractor[A,B](f: A => Option[B]) {
     def unapply( a: A) = f(a)
     def unapply[C]( ta: Traversable[A])(implicit g: Flattener[B,C]): Option[C] = g(ta.view.map(f))
-    
-    object Pick {
-      def unapply( ta: Traversable[A]) = pick(ta)(f)
-    }
-  }
-
-  class Tester[A](p: A => Boolean) {
-    
-    def unapply(a: A) = p(a)
-    def unapply(t: Traversable[A]) = t forall p
-    
-    object Exists {
-      def unapply(t: Traversable[A]) = t exists p
-    }
-  }
-  
-  object & {
-    def unapply[A](a: A) = Some(a, a)
-  }
-  
-  object Select {
-    def unapply[A](t : Traversable[A]) = t.headOption
-  }
-  
-  object Single {
-    def unapply[A](t : Traversable[A]) = if( t.size == 1 ) Some( t.head ) else None
   }
 
   trait Flattener[B,C] extends (Traversable[Option[B]] => Option[C])
@@ -46,13 +20,8 @@ object Pattern {
   }
 
   def nonEmpty[T <: Traversable[_]]( t: T )= if( t isEmpty ) None else Some(t)   
-
-  def pick[A,B](ta: Traversable[A])(f: A => Option[B]): Option[B] = {
-    for( a <- ta) {
-      val b = f(a)
-      if(b.isDefined)
-        return b
-    }
-    None
+  
+  object & {
+    def unapply[A](a: A) = Some(a, a)
   }
 }
