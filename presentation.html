@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<!--
+  Copyright 2010 Google Inc.
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+     http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+
+  Original slides: Marcin Wichary (mwichary@google.com)
+  Modifications: Ernest Delgado (ernestd@google.com)
+                 Alex Russell (slightlyoff@chromium.org)
+
+  landslide modifications: Adam Zapletal (adamzap@gmail.com)
+                           Nicolas Perriault (nperriault@gmail.com)
+-->
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>[Stupid] Pattern Matching Tricks</title>
+    <!-- Styles -->
+    
+    <link rel="stylesheet" media="print" href="file:///home/adv/projects/pattern-tricks/theme/css/print.css">
+    <link rel="stylesheet" media="screen, projection" href="file:///home/adv/projects/pattern-tricks/theme/css/screen.css">
+    
+    
+    <!-- /Styles -->
+    <!-- Javascripts -->
+    
+    <script type="text/javascript" src="file:///home/adv/projects/pattern-tricks/theme/js/slides.js"></script>
+    
+    
+    <!-- /Javascripts -->
+</head>
+<body>
+  <div id="blank"></div>
+  <div class="presentation">
+    <div id="current_presenter_notes">
+      <div id="presenter_note"></div>
+    </div>
+    <div class="slides">
+      
+      <!-- slide source: pattern-tricks.md -->
+      <div class="slide-wrapper">
+        <div class="slide">
+          <div class="inner">
+            
+            <header><h1>[Stupid] Pattern Matching Tricks</h1></header>
+            
+            
+            <section><p><img alt="Trick" src="file:///home/adv/projects/pattern-tricks/dog.jpeg" /></p>
+<p>Arnold deVos</p>
+<pre><code>@a4dev
+adv-contact-trick@langdale.com.au
+</code></pre></section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="pattern-tricks.md">pattern-tricks.md</a>
+            </aside>
+            
+            <aside class="page_number">
+              1/7
+            </aside>
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: pattern-tricks.md -->
+      <div class="slide-wrapper">
+        <div class="slide has_code">
+          <div class="inner">
+            
+            <header><h1>This is pattern matching:</h1></header>
+            
+            
+            <section><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5
+6</pre></div></td><td class="code"><div class="highlight"><pre><span class="k">case</span> <span class="k">class</span> <span class="nc">Song</span><span class="o">(</span> <span class="n">n</span><span class="k">:</span> <span class="kt">Int</span><span class="o">,</span> <span class="n">thing</span><span class="k">:</span> <span class="kt">String</span><span class="o">)</span>
+<span class="k">val</span> <span class="n">s</span> <span class="k">=</span> <span class="nc">Song</span><span class="o">(</span> <span class="mi">10</span><span class="o">,</span> <span class="s">&quot;green bottles&quot;</span><span class="o">)</span>
+
+<span class="k">val</span> <span class="nc">Song</span><span class="o">(</span><span class="mi">10</span><span class="o">,</span> <span class="n">x</span><span class="o">)</span> <span class="k">=</span> <span class="n">s</span>
+<span class="k">val</span> <span class="n">y</span> <span class="k">=</span> <span class="n">s</span> <span class="k">match</span> <span class="o">{</span> <span class="k">case</span> <span class="nc">Song</span><span class="o">(</span><span class="mi">10</span><span class="o">,</span> <span class="n">thing</span><span class="o">)</span> <span class="k">=&gt;</span> <span class="n">thing</span> <span class="o">}</span>
+<span class="k">val</span> <span class="n">z</span> <span class="k">=</span> <span class="k">for</span><span class="o">(</span> <span class="nc">Song</span><span class="o">(</span><span class="mi">10</span><span class="o">,</span> <span class="n">thing</span><span class="o">)</span> <span class="k">&lt;-</span> <span class="nc">Some</span><span class="o">(</span><span class="n">s</span><span class="o">)</span> <span class="o">)</span> <span class="k">yield</span> <span class="n">thing</span>
+</pre></div>
+</td></tr></table></section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="pattern-tricks.md">pattern-tricks.md</a>
+            </aside>
+            
+            <aside class="page_number">
+              2/7
+            </aside>
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: pattern-tricks.md -->
+      <div class="slide-wrapper">
+        <div class="slide has_code">
+          <div class="inner">
+            
+            <header><h1>This is a partial function:</h1></header>
+            
+            
+            <section><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5
+6</pre></div></td><td class="code"><div class="highlight"><pre><span class="k">val</span> <span class="n">pf</span><span class="k">:</span> <span class="kt">PartialFunction</span><span class="o">[</span><span class="kt">Song</span>, <span class="kt">String</span><span class="o">]</span> <span class="k">=</span> <span class="o">{</span> 
+  <span class="k">case</span> <span class="nc">Song</span><span class="o">(</span><span class="mi">10</span><span class="o">,</span> <span class="n">thing</span><span class="o">)</span> <span class="k">=&gt;</span> <span class="n">thing</span> 
+  <span class="k">case</span> <span class="nc">Song</span><span class="o">(</span><span class="n">_</span><span class="o">,</span> <span class="n">thing</span><span class="o">)</span> <span class="k">=&gt;</span> <span class="n">thing</span> <span class="o">+</span> <span class="s">&quot;, but not 10 of them&quot;</span>
+<span class="o">}</span>
+
+<span class="k">val</span> <span class="n">a</span> <span class="k">=</span> <span class="n">pf</span><span class="o">(</span><span class="n">s</span><span class="o">)</span>
+</pre></div>
+</td></tr></table></section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="pattern-tricks.md">pattern-tricks.md</a>
+            </aside>
+            
+            <aside class="page_number">
+              3/7
+            </aside>
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: pattern-tricks.md -->
+      <div class="slide-wrapper">
+        <div class="slide has_code">
+          <div class="inner">
+            
+            <header><h1>Here is an extractor:</h1></header>
+            
+            
+            <section><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5</pre></div></td><td class="code"><div class="highlight"><pre><span class="k">object</span> <span class="nc">ExtractCount</span> <span class="o">{</span>
+  <span class="k">def</span> <span class="n">unapply</span><span class="o">(</span><span class="n">s</span><span class="k">:</span> <span class="kt">Song</span><span class="o">)</span> <span class="k">=</span> <span class="nc">Some</span><span class="o">(</span><span class="n">s</span><span class="o">.</span><span class="n">n</span><span class="o">)</span>
+<span class="o">}</span>
+
+<span class="k">val</span> <span class="n">b</span> <span class="k">=</span> <span class="n">s</span> <span class="k">match</span> <span class="o">{</span> <span class="k">case</span> <span class="nc">ExtractCount</span><span class="o">(</span><span class="n">n</span><span class="o">)</span> <span class="k">=&gt;</span> <span class="n">n</span> <span class="o">+</span> <span class="s">&quot; things&quot;</span> <span class="o">}</span>
+</pre></div>
+</td></tr></table></section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="pattern-tricks.md">pattern-tricks.md</a>
+            </aside>
+            
+            <aside class="page_number">
+              4/7
+            </aside>
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: pattern-tricks.md -->
+      <div class="slide-wrapper">
+        <div class="slide has_code">
+          <div class="inner">
+            
+            <header><h1>Here is an optional function:</h1></header>
+            
+            
+            <section><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5
+6</pre></div></td><td class="code"><div class="highlight"><pre><span class="k">object</span> <span class="nc">countOption</span> <span class="k">extends</span> <span class="o">(</span><span class="nc">Song</span> <span class="k">=&gt;</span> <span class="nc">Option</span><span class="o">[</span><span class="kt">Int</span><span class="o">])</span> <span class="o">{</span>
+  <span class="k">def</span> <span class="n">apply</span><span class="o">(</span><span class="n">s</span><span class="k">:</span> <span class="kt">Song</span><span class="o">)</span> <span class="k">=</span> <span class="nc">Some</span><span class="o">(</span><span class="n">s</span><span class="o">.</span><span class="n">n</span><span class="o">)</span>
+<span class="o">}</span>
+
+<span class="k">val</span> <span class="n">c</span> <span class="k">=</span> <span class="n">countOption</span><span class="o">(</span><span class="n">s</span><span class="o">)</span> <span class="n">map</span> <span class="o">{</span> <span class="k">_</span> <span class="o">+</span> <span class="s">&quot; things&quot;</span> <span class="o">}</span> <span class="n">getOrElse</span> <span class="o">{</span> 
+            <span class="k">throw</span> <span class="k">new</span> <span class="nc">MatchError</span><span class="o">(</span><span class="n">s</span><span class="o">)</span> <span class="o">}</span>
+</pre></div>
+</td></tr></table></section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="pattern-tricks.md">pattern-tricks.md</a>
+            </aside>
+            
+            <aside class="page_number">
+              5/7
+            </aside>
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: pattern-tricks.md -->
+      <div class="slide-wrapper">
+        <div class="slide">
+          <div class="inner">
+            
+            <header><h1>Different forms, convertable:</h1></header>
+            
+            
+            <section><p><img alt="relationships" src="file:///home/adv/projects/pattern-tricks/relationships.png" /></p></section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="pattern-tricks.md">pattern-tricks.md</a>
+            </aside>
+            
+            <aside class="page_number">
+              6/7
+            </aside>
+          </footer>
+        </div>
+      </div>
+      
+      <!-- slide source: pattern-tricks.md -->
+      <div class="slide-wrapper">
+        <div class="slide">
+          <div class="inner">
+            
+            <header><h1>Extractor as an inverse function:</h1></header>
+            
+            
+            <section><p><img alt="inverses" src="file:///home/adv/projects/pattern-tricks/inverses.png" /></p></section>
+            
+          </div>
+          <div class="presenter_notes">
+            <header><h1>Presenter Notes</h1></header>
+            <section>
+            
+            </section>
+          </div>
+          <footer>
+            
+            <aside class="source">
+              Source: <a href="pattern-tricks.md">pattern-tricks.md</a>
+            </aside>
+            
+            <aside class="page_number">
+              7/7
+            </aside>
+          </footer>
+        </div>
+      </div>
+      
+    </div>
+  </div>
+  
+  <div id="toc" class="sidebar hidden">
+    <h2>Table of Contents</h2>
+    <table>
+      <caption>Table of Contents</caption>
+      
+      <tr id="toc-row-1">
+        <th><a href="#slide1">[Stupid] Pattern Matching Tricks</a></th>
+        <td><a href="#slide1">1</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-2">
+        <th><a href="#slide2">This is pattern matching:</a></th>
+        <td><a href="#slide2">2</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-3">
+        <th><a href="#slide3">This is a partial function:</a></th>
+        <td><a href="#slide3">3</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-4">
+        <th><a href="#slide4">Here is an extractor:</a></th>
+        <td><a href="#slide4">4</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-5">
+        <th><a href="#slide5">Here is an optional function:</a></th>
+        <td><a href="#slide5">5</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-6">
+        <th><a href="#slide6">Different forms, convertable:</a></th>
+        <td><a href="#slide6">6</a></td>
+      </tr>
+      
+      
+      <tr id="toc-row-7">
+        <th><a href="#slide7">Extractor as an inverse function:</a></th>
+        <td><a href="#slide7">7</a></td>
+      </tr>
+      
+      
+    </table>
+  </div>
+  
+  <div id="help" class="sidebar hidden">
+    <h2>Help</h2>
+    <table>
+      <caption>Help</caption>
+      <tr>
+        <th>Table of Contents</th>
+        <td>t</td>
+      </tr>
+      <tr>
+        <th>Exposé</th>
+        <td>ESC</td>
+      </tr>
+      <tr>
+        <th>Full screen slides</th>
+        <td>e</td>
+      </tr>
+      <tr>
+        <th>Presenter View</th>
+        <td>p</td>
+      </tr>
+      <tr>
+        <th>Source Files</th>
+        <td>s</td>
+      </tr>
+      <tr>
+        <th>Slide Numbers</th>
+        <td>n</td>
+      </tr>
+      <tr>
+        <th>Toggle screen blanking</th>
+        <td>b</td>
+      </tr>
+      <tr>
+        <th>Show/hide slide context</th>
+        <td>c</td>
+      </tr>
+      <tr>
+        <th>Notes</th>
+        <td>2</td>
+      </tr>
+      <tr>
+        <th>Help</th>
+        <td>h</td>
+      </tr>
+    </table>
+  </div>
+  <script>main()</script>
+</body>
+</html>
