@@ -74,7 +74,15 @@ def pattern[B](pf: PartialFunction[Name,B]) =
 ---
 # Onto the tricks ...
 
+The example data is in family.scala
+
+The pattern operators/DSL/whatever including the magical '&' operator are in pattern.scala
+
+The tricks in action are in examples.scala
+
 ---
 # Come again?
 
 ## [http://notes.langdale.com.au](http://notes.langdale.com.au/Querying_a_Dataset_with_Scala_s_Pattern_Matching.html)
+
+(A blog post about this.)
