@@ -58,7 +58,7 @@ Arnold deVos
 ---
 # Equipment needed:
 
-![frisbee patent](frisbee2.jpg)
+![frisbee patent](https://github.com/etorreborre/pattern_tricks/raw/master/frisbee2.jpg)
 
     !scala
     class Extractor[A,B]( f: A => Option[B] ) { 
