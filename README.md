@@ -1,6 +1,6 @@
 # [Stupid] Pattern Matching Tricks
 
-![Trick](https://github.com/etorreborre/pattern_tricks/raw/master/dog.jpeg)
+![Trick](pattern_tricks/raw/master/dog.jpeg)
 
 Arnold deVos
 
@@ -50,12 +50,12 @@ val c = countOption(s) map { _ + " things" } getOrElse { throw new MatchError(s)
 ---
 # Different forms, convertable:
 
-![relationships](https://github.com/etorreborre/pattern_tricks/raw/master/relationships.png)
+![relationships](pattern_tricks/raw/master/relationships.png)
 
 ---
 # Equipment needed:
 
-![frisbee patent](https://github.com/etorreborre/pattern_tricks/raw/master/frisbee2.jpg)
+![frisbee patent](pattern_tricks/raw/master/frisbee2.jpg)
 
 ```scala
 class Extractor[A,B]( f: A => Option[B] ) { 
@@ -65,7 +65,7 @@ class Extractor[A,B]( f: A => Option[B] ) {
 ---
 # Equipment needed:
 
-![retriever](https://github.com/etorreborre/pattern_tricks/raw/master/dog2.jpeg)
+![retriever](pattern_tricks/raw/master/dog2.jpeg)
 
 ```scala
 def pattern[B](pf: PartialFunction[Name,B]) = 
