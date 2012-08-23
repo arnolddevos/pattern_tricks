@@ -1,6 +1,6 @@
 # [Stupid] Pattern Matching Tricks
 
-![Trick](https://raw.github.com/etorreborre/pattern_tricks/master/dog.jpeg)
+![Trick](./dog.jpeg)
 
 Arnold deVos
 
