@@ -10,46 +10,44 @@ Arnold deVos
 ---
 # This is pattern matching:
 
-    !scala
+```scala
     case class Song( n: Int, thing: String)
     val s = Song( 10, "green bottles")
 
     val Song(10, x) = s
     val y = s match { case Song(10, thing) => thing }
     val z = for( Song(10, thing) <- Some(s) ) yield thing 
-
+```
 ---
 # This is a partial function:
-
-    !scala
+```scala
     val pf: PartialFunction[Song, String] = { 
       case Song(10, thing) => thing 
       case Song(_, thing) => thing + ", but not 10 of them"
     }
 
     val a = pf(s)
-
+```
 ---
 # Here is an extractor:
-
-    !scala
+```scala
     object ExtractCount {
       def unapply(s: Song) = Some(s.n)
     }
 
     val b = s match { case ExtractCount(n) => n + " things" }
-
+```
 ---
 # Here is an optional function:
 
-    !scala
+```scala
     object countOption extends (Song => Option[Int]) {
       def apply(s: Song) = Some(s.n)
     }
    
     val c = countOption(s) map { _ + " things" } getOrElse { 
                 throw new MatchError(s) }
-
+```
 ---
 # Different forms, convertable:
 
@@ -60,20 +58,20 @@ Arnold deVos
 
 ![frisbee patent](https://github.com/etorreborre/pattern_tricks/raw/master/frisbee2.jpg)
 
-    !scala
+```scala
     class Extractor[A,B]( f: A => Option[B] ) { 
       def unapply( a: A ) = f(a) 
     }
-
+```
 ---
 # Equipment needed:
 
 ![retriever](https://github.com/etorreborre/pattern_tricks/raw/master/dog2.jpeg)
 
-    !scala
+```scala
     def pattern[B](pf: PartialFunction[Name,B]) = 
       new Extractor(pf.lift)
-
+```
 ---
 # Onto the tricks ...
 
