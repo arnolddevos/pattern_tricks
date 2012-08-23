@@ -53,7 +53,7 @@ Arnold deVos
 ---
 # Different forms, convertable:
 
-![relationships](/relationships.png)
+![relationships](https://github.com/etorreborre/pattern_tricks/raw/master/relationships.png)
 
 ---
 # Equipment needed:
@@ -68,7 +68,7 @@ Arnold deVos
 ---
 # Equipment needed:
 
-![retriever](dog2.jpeg)
+![retriever](https://github.com/etorreborre/pattern_tricks/raw/master/dog2.jpeg)
 
     !scala
     def pattern[B](pf: PartialFunction[Name,B]) = 
