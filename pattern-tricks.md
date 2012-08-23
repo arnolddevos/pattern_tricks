@@ -1,6 +1,6 @@
 # [Stupid] Pattern Matching Tricks
 
-![Trick](~/dog.jpeg)
+![Trick](./dog.jpeg)
 
 Arnold deVos
 
