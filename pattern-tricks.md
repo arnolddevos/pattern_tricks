@@ -53,7 +53,7 @@ Arnold deVos
 ---
 # Different forms, convertable:
 
-![relationships](pattern_tricks/relationships.png)
+![relationships](/relationships.png)
 
 ---
 # Equipment needed:
