@@ -1,0 +1,12 @@
+This project is actually a small landslide presentation.  To build the presentation:
+
+- obtain landslide: https://github.com/adamzap/landslide
+
+- bash landslide.sh
+
+- open presentation.html in a browser 
+
+(but if you have IE6 please surrender it at your nearest police station)
+
+The .scala files go with the presentation and illustrate the ideas.
+
