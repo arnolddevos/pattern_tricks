@@ -28,14 +28,14 @@
     <title>[Stupid] Pattern Matching Tricks</title>
     <!-- Styles -->
     
-    <link rel="stylesheet" media="print" href="pattern-tricks/theme/css/print.css">
-    <link rel="stylesheet" media="screen, projection" href="pattern-tricks/theme/css/screen.css">
+    <link rel="stylesheet" media="print" href="theme/css/print.css">
+    <link rel="stylesheet" media="screen, projection" href="theme/css/screen.css">
     
     
     <!-- /Styles -->
     <!-- Javascripts -->
     
-    <script type="text/javascript" src="pattern-tricks/theme/js/slides.js"></script>
+    <script type="text/javascript" src="theme/js/slides.js"></script>
     
     
     <!-- /Javascripts -->
@@ -56,7 +56,7 @@
             <header><h1>[Stupid] Pattern Matching Tricks</h1></header>
             
             
-            <section><p><img alt="Trick" src="pattern-tricks/dog.jpeg" /></p>
+            <section><p><img alt="Trick" src="dog.jpeg" /></p>
 <p>Arnold deVos</p>
 <pre><code>@a4dev
 adv-contact-trick@langdale.com.au
@@ -256,7 +256,7 @@ adv-contact-trick@langdale.com.au
             <header><h1>Different forms, convertable:</h1></header>
             
             
-            <section><p><img alt="relationships" src="pattern-tricks/relationships.png" /></p></section>
+            <section><p><img alt="relationships" src="relationships.png" /></p></section>
             
           </div>
           <div class="presenter_notes">
@@ -286,7 +286,7 @@ adv-contact-trick@langdale.com.au
             <header><h1>Equipment needed:</h1></header>
             
             
-            <section><p><img alt="frisbee patent" src="pattern-tricks/frisbee2.jpg" /></p>
+            <section><p><img alt="frisbee patent" src="frisbee2.jpg" /></p>
 <table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
 2
 3</pre></div></td><td class="code"><div class="highlight"><pre><span class="k">class</span> <span class="nc">Extractor</span><span class="o">[</span><span class="kt">A</span>,<span class="kt">B</span><span class="o">](</span> <span class="n">f</span><span class="k">:</span> <span class="kt">A</span> <span class="o">=&gt;</span> <span class="nc">Option</span><span class="o">[</span><span class="kt">B</span><span class="o">]</span> <span class="o">)</span> <span class="o">{</span> 
@@ -323,7 +323,7 @@ adv-contact-trick@langdale.com.au
             <header><h1>Equipment needed:</h1></header>
             
             
-            <section><p><img alt="retriever" src="pattern-tricks/dog2.jpeg" /></p>
+            <section><p><img alt="retriever" src="dog2.jpeg" /></p>
 <table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
 2</pre></div></td><td class="code"><div class="highlight"><pre><span class="k">def</span> <span class="n">pattern</span><span class="o">[</span><span class="kt">B</span><span class="o">](</span><span class="n">pf</span><span class="k">:</span> <span class="kt">PartialFunction</span><span class="o">[</span><span class="kt">Name</span>,<span class="kt">B</span><span class="o">])</span> <span class="k">=</span> 
   <span class="k">new</span> <span class="nc">Extractor</span><span class="o">(</span><span class="n">pf</span><span class="o">.</span><span class="n">lift</span><span class="o">)</span>
