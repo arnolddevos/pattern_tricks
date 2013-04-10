@@ -16,7 +16,7 @@ def ex1 = "Julie" match {
 
 def ex2 = parents.get("Julie") map { p => "The parents are: " + p } getOrElse { 
   children.get("Julie") map { c => "Parents are unknown but children are: " + c } getOrElse { 
-    "Don't know any of Julie's relatives" 
+    "Don't know any relatives" 
   }
 }
 
