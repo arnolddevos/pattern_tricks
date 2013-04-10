@@ -9,13 +9,13 @@ val Parents = new Extractor(parents.get)
 val Children = new Extractor(children.get)
 
 def ex1 = "Julie" match {
-  case Parents(p) => "Julies parents are: " + p
-  case Children(c) => "Julies parents are unknown but has children: " + c
-  case _ => "Don't know any of Julie's relatives"
+  case Parents(p) => "The parents are: " + p
+  case Children(c) => "The parents are unknown but children are: " + c
+  case _ => "Don't know any relatives"
 }
 
-def ex2 = parents.get("Julie") map { p => "Julies parents are: " + p } getOrElse { 
-  children.get("Julie") map { c => "Julies parents are unknown but has children: " + c } getOrElse { 
+def ex2 = parents.get("Julie") map { p => "The parents are: " + p } getOrElse { 
+  children.get("Julie") map { c => "Parents are unknown but children are: " + c } getOrElse { 
     "Don't know any of Julie's relatives" 
   }
 }
